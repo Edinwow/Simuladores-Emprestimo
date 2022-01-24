@@ -1,0 +1,54 @@
+<!-- Simulador idealizado para consultas rápidas durante o atendimento ao cliente, para passar o valor aproximado disponível para contratação -->
+
+<!-- Campos mínimos necessários para o funcionamento -->
+<input id="parcelaNovo" placeholder="Valor da parcela">
+<input id="liberadoNovo" placeholder="Valor liberado">
+<button onclick="calculaNovo()">Calcular</button>
+<button onclick="limpaNovo()">Limpar</button>
+
+<script>
+    
+    // Valor do coeficiente varia de banco para banco, o valor utilizado aqui é uma média dos coeficientes utilizados pelos bancos na taxa de 2,14% a.m. no período de janeiro de 2022
+
+    var coeficiente = 0.027519;  
+
+    function calculaNovo() { // Recebe, calcula e retorna os valores informados e solicitados
+        var parcelaNovo = parseFloat(document.getElementById("parcelaNovo").value.replace('.', '').replace(',', '.')); // Pega valor da parcela e converte para número
+        var liberadoNovo = parseFloat(document.getElementById("liberadoNovo").value.replace('.', '').replace(',', '.')); // Pega valor liberado e converta para número
+
+        if(isNaN(parcelaNovo) && isNaN(liberadoNovo)) { // Se dois campos vazios
+            console.log('Um dos valores deve ser informado');
+            alert("Insira um dos valores solicitados."); // Retorna alerta
+        } else if(isNaN(parcelaNovo)) { // Se parcela vazia
+            console.log('Envia para calculo de valor de parcela');
+            document.getElementById("parcelaNovo").value = calculaParcelaNovo(liberadoNovo).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}); // Calcula e retorna valor de parcela
+            console.log('Valor de parcela retornado com sucesso');
+        } else if(isNaN(liberadoNovo)) { // Se liberado vazio 
+            console.log('Envia para calculo de valor liberado');
+            document.getElementById("liberadoNovo").value = calculaLiberadoNovo(parcelaNovo).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}); // Calcula e retorna valor liberado
+            console.log('Valor liberado retornado com sucesso');
+        } else { // Se dois campos preenchidos
+            console.log('Somente um dos valores deve ser informado');
+            alert("Insira somente um dos valores.") // Retorna alerta
+        }
+    }
+
+    function calculaParcelaNovo(liberado) { // Recebe valor liberado e retorna valor de parcela de acordo com coeficiente
+        var parcela = parseFloat((liberado * coeficiente).toFixed(2));
+        console.log('Valor de parcela calculado com sucesso');
+        return parcela;
+    }
+    
+    function calculaLiberadoNovo(parcela) { // Recebe valor de parcela e retorna valor líquido de acordo com coeficiente
+        var liberado = parseFloat((parcela / coeficiente).toFixed(2));
+        console.log('Valor liberado calculado com sucesso');
+        return liberado;
+    }
+
+    function limpaNovo() { // Limpa os campos da simulação
+        document.getElementById("parcelaNovo").value = "";
+        document.getElementById("liberadoNovo").value = "";
+        console.log('Campos limpos com sucesso');
+    }
+
+</script>
