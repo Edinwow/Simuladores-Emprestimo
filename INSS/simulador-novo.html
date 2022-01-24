@@ -13,17 +13,19 @@
     var coeficiente = 0.027519;  
 
     function calculaNovo() { // Recebe, calcula e retorna os valores informados e solicitados
-        var parcelaNovo = parseFloat(document.getElementById("parcelaNovo").value.replace('.', '').replace(',', '.')); // Pega valor da parcela e converte para número
-        var liberadoNovo = parseFloat(document.getElementById("liberadoNovo").value.replace('.', '').replace(',', '.')); // Pega valor liberado e converta para número
+        var parcelaNovoString = document.getElementById("parcelaNovo").value; // Pega valor de parcela
+        var liberadoNovoString = document.getElementById("liberadoNovo").value; // Pega valor liberado
+        var parcelaNovo = parseFloat(parcelaNovoString.replace('.', '').replace(',', '.')); // Converte valor de parcela para número
+        var liberadoNovo = parseFloat(liberadoNovoString.replace('.', '').replace(',', '.')); // Converta valor liberado para número
 
-        if(isNaN(parcelaNovo) && isNaN(liberadoNovo)) { // Se dois campos vazios
+        if(parcelaNovoString == "" && liberadoNovoString == "") { // Se dois campos vazios
             console.log('Um dos valores deve ser informado');
             alert("Insira um dos valores solicitados."); // Retorna alerta
-        } else if(isNaN(parcelaNovo)) { // Se parcela vazia
+        } else if(parcelaNovoString == "") { // Se valor liberado preenchido
             console.log('Envia para calculo de valor de parcela');
             document.getElementById("parcelaNovo").value = calculaParcelaNovo(liberadoNovo).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}); // Calcula e retorna valor de parcela
             console.log('Valor de parcela retornado com sucesso');
-        } else if(isNaN(liberadoNovo)) { // Se liberado vazio 
+        } else if(liberadoNovoString == "") { // Se valor de parcela preenchido 
             console.log('Envia para calculo de valor liberado');
             document.getElementById("liberadoNovo").value = calculaLiberadoNovo(parcelaNovo).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}); // Calcula e retorna valor liberado
             console.log('Valor liberado retornado com sucesso');
