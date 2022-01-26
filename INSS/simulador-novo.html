@@ -1,55 +1,57 @@
-<!-- Simulador idealizado para consultas rápidas durante o atendimento ao cliente, para passar o valor aproximado disponível para contratação -->
+<!-- Simulador para consulta aproximada de valor líquido liberado ou valor de parcela para contratos novos -->
 
 <!-- Campos mínimos necessários para o funcionamento -->
-<input id="parcelaNovo" placeholder="Valor da parcela">
-<input id="liberadoNovo" placeholder="Valor liberado">
-<button onclick="calculaNovo()">Calcular</button>
-<button onclick="limpaNovo()">Limpar</button>
+<input id='parcelaNovo' placeholder='Valor da parcela'>
+<input id='liberadoNovo' placeholder='Valor liberado'>
+<button onclick='calculaNovo()'>Calcular</button>
+<button onclick='limpaNovo()'>Limpar</button>
 
 <script>
     
-    // Valor do coeficiente varia de banco para banco, o valor utilizado aqui é uma média dos coeficientes utilizados pelos bancos na taxa de 2,14% a.m. no período de janeiro de 2022
-
-    var coeficiente = 0.027519;  
+    var coeficiente = 0.027519; // Valor do coeficiente varia de banco para banco, o valor utilizado aqui é uma média dos coeficientes utilizados pelos bancos na taxa de 2,14% a.m. no período de janeiro de 2022
 
     function calculaNovo() { // Recebe, calcula e retorna os valores informados e solicitados
-        var parcelaNovoString = document.getElementById("parcelaNovo").value; // Pega valor de parcela
-        var liberadoNovoString = document.getElementById("liberadoNovo").value; // Pega valor liberado
+        var parcelaNovoString = document.getElementById('parcelaNovo').value; 
+        var liberadoNovoString = document.getElementById('liberadoNovo').value;
+
         var parcelaNovo = parseFloat(parcelaNovoString.replace('.', '').replace(',', '.')); // Converte valor de parcela para número
         var liberadoNovo = parseFloat(liberadoNovoString.replace('.', '').replace(',', '.')); // Converta valor liberado para número
 
-        if(parcelaNovoString == "" && liberadoNovoString == "") { // Se dois campos vazios
-            console.log('Um dos valores deve ser informado');
-            alert("Insira um dos valores solicitados."); // Retorna alerta
-        } else if(parcelaNovoString == "") { // Se valor liberado preenchido
+        if(parcelaNovoString == '' && liberadoNovoString == '') { // Se dois campos vazios
+            alert('Insira um dos valores solicitados.');
+        } else if(parcelaNovoString == '') { // Se valor liberado preenchido
             console.log('Envia para calculo de valor de parcela');
-            document.getElementById("parcelaNovo").value = calculaParcelaNovo(liberadoNovo).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}); // Calcula e retorna valor de parcela
+            document.getElementById('parcelaNovo').value = converteMoeda(calculaParcelaNovo(liberadoNovo));
             console.log('Valor de parcela retornado com sucesso');
-        } else if(liberadoNovoString == "") { // Se valor de parcela preenchido 
+        } else if(liberadoNovoString == '') { // Se valor de parcela preenchido 
             console.log('Envia para calculo de valor liberado');
-            document.getElementById("liberadoNovo").value = calculaLiberadoNovo(parcelaNovo).toLocaleString('pt-br',{style: 'currency', currency: 'BRL'}); // Calcula e retorna valor liberado
+            document.getElementById('liberadoNovo').value = converteMoeda(calculaLiberadoNovo(parcelaNovo));
             console.log('Valor liberado retornado com sucesso');
         } else { // Se dois campos preenchidos
-            console.log('Somente um dos valores deve ser informado');
-            alert("Insira somente um dos valores.") // Retorna alerta
+            alert('Insira somente um dos valores.');
         }
     }
 
-    function calculaParcelaNovo(liberado) { // Recebe valor liberado e retorna valor de parcela de acordo com coeficiente
-        var parcela = parseFloat((liberado * coeficiente).toFixed(2));
+    function calculaParcelaNovo(liberado) {
+        var parcela = parseFloat((liberado * coeficiente));
         console.log('Valor de parcela calculado com sucesso');
         return parcela;
     }
     
-    function calculaLiberadoNovo(parcela) { // Recebe valor de parcela e retorna valor líquido de acordo com coeficiente
-        var liberado = parseFloat((parcela / coeficiente).toFixed(2));
+    function calculaLiberadoNovo(parcela) { 
+        var liberado = parseFloat((parcela / coeficiente));
         console.log('Valor liberado calculado com sucesso');
         return liberado;
     }
 
-    function limpaNovo() { // Limpa os campos da simulação
-        document.getElementById("parcelaNovo").value = "";
-        document.getElementById("liberadoNovo").value = "";
+    function converteMoeda (valor) {
+        var convertido = valor.toLocaleString('pt-br',{style: 'currency', currency: 'BRL'})
+        return convertido;
+    }
+
+    function limpaNovo() {
+        document.getElementById('parcelaNovo').value = '';
+        document.getElementById('liberadoNovo').value = '';
         console.log('Campos limpos com sucesso');
     }
 
